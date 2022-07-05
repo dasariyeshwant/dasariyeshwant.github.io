@@ -1,0 +1,18 @@
+html {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0 auto;
+    max-width: 1440px;
+}
+
+:root {
+    --pseudo-cursor: '|';
+}
