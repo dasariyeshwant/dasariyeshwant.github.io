@@ -56,7 +56,8 @@ class Navbar extends HTMLElement {
         showdowRoot.appendChild(navbarTemplate.content.cloneNode(true));
         
         this.addEventListener("click", function(event) {
-            
+            console.log('the event is: ', event);
+            console.log('the path is: ', event.path);
             if (event.path[0].classList.contains('fa-bars')) {
                 this.toggle();
             }
