@@ -194,4 +194,4 @@ class Introduction extends HTMLElement {
     }
 }
 
-customElements.define('intro-section', Introduction, {extends: 'section'});
+customElements.define('intro-section', Introduction);

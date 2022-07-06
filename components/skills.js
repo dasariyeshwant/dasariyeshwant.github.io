@@ -308,4 +308,4 @@ class Skills extends HTMLElement {
         shadowRoot.appendChild(skillsTemplate.content.cloneNode(true));
     }
 }
-customElements.define('skills-section', Skills, {extends: 'section'});
+customElements.define('skills-section', Skills);

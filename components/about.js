@@ -111,4 +111,4 @@ class About extends HTMLElement {
         shadowRoot.appendChild(aboutTemplate.content.cloneNode(true));
     }
 }
-customElements.define('about-section', About, {extends: 'section'});
+customElements.define('about-section', About);
