@@ -80,4 +80,4 @@ class Contact extends HTMLElement {
     }
 }
 
-customElements.define('contact-section', Contact, {extends: 'section'});
+customElements.define('contact-section', Contact);
