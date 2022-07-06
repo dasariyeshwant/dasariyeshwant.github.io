@@ -75,4 +75,4 @@ class Navbar extends HTMLElement {
     }
 }
 
-customElements.define('nav-bar', Navbar, { extends: 'nav'})
+customElements.define('nav-bar', Navbar)
