@@ -55,16 +55,19 @@ class Navbar extends HTMLElement {
         const showdowRoot = this.attachShadow({mode: 'open'});
         showdowRoot.appendChild(navbarTemplate.content.cloneNode(true));
         
-        this.addEventListener("click", function(event) {
-            console.log('the event is: ', event);
-            console.log('the target is: ', event.target);
-            console.log('the target classlist is: ', event.target.classList);
-            console.log('the path is: ', event.path);
-            if (event.path[0].classList.contains('fa-bars')) {
-                this.toggle();
-            }
+    
+        this.shadowRoot.getElementById('menu-icon')
+            .addEventListener('click', () => this.toggle());
+        // this.addEventListener("click", function(event) {
+        //     console.log('the event is: ', event);
+        //     console.log('the target is: ', event.target);
+        //     console.log('the target classlist is: ', event.target.classList);
+        //     console.log('the path is: ', event.path);
+        //     if (event.path[0].classList.contains('fa-bars')) {
+        //         this.toggle();
+        //     }
             
-        });
+        // });
         
     }
     toggle() {
