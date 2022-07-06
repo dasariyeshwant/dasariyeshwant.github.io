@@ -57,6 +57,8 @@ class Navbar extends HTMLElement {
         
         this.addEventListener("click", function(event) {
             console.log('the event is: ', event);
+            console.log('the target is: ', event.target);
+            console.log('the target classlist is: ', event.target.classList);
             console.log('the path is: ', event.path);
             if (event.path[0].classList.contains('fa-bars')) {
                 this.toggle();
