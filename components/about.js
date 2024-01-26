@@ -90,13 +90,14 @@ aboutTemplate.innerHTML = `
         <div class="about-para">
             <h2 class="hide-on-mobile">About</h2>
             <p>
-                Hi, I’m Yeshwant. I Front-end Engineer with over 7 years of experience in developing rich and
-                engaging client side applications using Javascript and
-                latest libraries and frameworks available. Apart from being
-                Front-end Engineer, I am also a full stack javascript developer who specializes in creating API’s using Node and express.
+            Hello, I'm Yeshwant, a seasoned Front-end Engineer with a dynamic 11-year journey crafting rich and engaging client-side applications.
+            Proficient in HTML, CSS, JavaScript, Angular and React. Alongside, I'm well-versed in supporting libraries crucial for daily tasks. 
             </p>
             <p>
-            I also enjoy training and mentoring other fellow developers or people who want to get into front-end world.
+            Beyond coding, I find joy in training and mentoring fellow developers, guiding aspiring talents into the vibrant world of front-end development. What excites me most is the constant evolution of technology. I'm keen on learning and always ready to embrace newer technologies, making each coding challenge an opportunity for growth.
+            </p>
+            <p>
+            Let's collaborate and elevate our coding journey together!
             </p>
         </div>
     </div>

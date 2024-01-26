@@ -140,8 +140,8 @@ class Introduction extends HTMLElement {
     para1Index = 0;
     para2Index = 0;
     headerText = 'Hello World!';
-    para1Text = 'Front-end Developer, Full-Stack developer & mentor. I develop web applications passionately, and I love what I do.';
-    para2Text = 'Get Ready to turn your ideas into reality!';
+    para1Text = "I'm a passionate Front-end and Full-Stack Developer, transforming ideas into immersive web experiences. With a love for coding and mentoring, I specialize in bringing creativity to life.";
+    para2Text = 'Get ready to see your vision come alive!';
     constructor() {
         super();
     }
