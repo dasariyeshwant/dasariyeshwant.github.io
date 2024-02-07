@@ -41,7 +41,10 @@ skillsTemplate.innerHTML = `
         .skill-btn-group {
             display: flex;
             justify-content: flex-end;
-            padding-right: 50px;
+            padding-right: 10px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
         }
 
         .skill-btn-group button {
@@ -52,8 +55,22 @@ skillsTemplate.innerHTML = `
         .pause-btn, .play-btn {
             font-size: 2rem;
         }
+    
+        .hide-on-mobile {
+            display: none;
+        }
+
+        .proficiency-text {
+            text-align: center;
+            margin-bottom: 0;
+            padding: 0 15px;
+        }
+        #chart-container {
+            position: relative;
+        }
 
         @media only screen and (min-width: 600px) {
+            
             h2 {
                 width: 50%;
             }
@@ -63,10 +80,17 @@ skillsTemplate.innerHTML = `
             .skills-notes {
                 font-size: 0.8rem;
             }
+      
         }
         @media only screen and (min-width: 768px) {
             h2 {
                 width: 40%;
+            }
+            .hide-on-mobile {
+                display: block;
+            }
+            .hide-on-medium-up {
+                display: none;
             }
             
         }
@@ -87,11 +111,14 @@ skillsTemplate.innerHTML = `
         <div class="skills-header">
             <h2>Skills</h2>
         </div>
-        <div id="chart-container"></div>
-        <div class="skill-btn-group">
-            <button type="button" id="pause-btn"><i class="fa fa-solid fa-circle-pause pause-btn"></i></button>
-            <button type="button" id="play-btn"><i class="fa fa-solid fa-circle-play play-btn"></i></button>
+        <p class="hide-on-medium-up proficiency-text">Proficiency Rating (0-10) for top 6 most used skills in a calender year</p>
+        <div id="chart-container">
+            <div class="skill-btn-group">
+                <button type="button" id="pause-btn"><i class="fa fa-solid fa-circle-pause pause-btn"></i></button>
+                <button type="button" id="play-btn" disabled><i class="fa fa-solid fa-circle-play play-btn"></i></button>
+            </div>
         </div>
+        
         <p class="skills-notes">Other Skills such as Redux, Webpack and supporting javascript libraries and tools have not been mentioned above.</p>
     </div>
 `;
@@ -330,7 +357,7 @@ class Skills extends HTMLElement {
                         proficiency: 4
                     },
                     {
-                        name: 'React Testing Library',
+                        name: 'RTL',
                         proficiency: 4
                     }
                 ]
@@ -359,8 +386,95 @@ class Skills extends HTMLElement {
                         proficiency: 6
                     },
                     {
-                        name: 'React Testing Library',
+                        name: 'RTL',
                         proficiency: 4
+                    }
+                ]
+            },
+             {
+                year: 2022,
+                skills: [
+                    {
+                        name: 'HTML/CSS',
+                        proficiency: 8
+                    },
+                    {
+                        name: 'JavaScript',
+                        proficiency: 8
+                    },
+                    {
+                        name: 'NodeJs',
+                        proficiency: 4
+                    },
+                    { 
+                        name: 'React',
+                        proficiency: 6
+                    },
+                    {
+                        name: 'Redux',
+                        proficiency: 5
+                    },
+                    {
+                        name: 'RTL',
+                        proficiency: 5
+                    }
+                ]
+            },
+             {
+                year: 2023,
+                skills: [
+                    {
+                        name: 'HTML/CSS',
+                        proficiency: 8
+                    },
+                    {
+                        name: 'JavaScript',
+                        proficiency: 8.5
+                    },
+                    {
+                        name: 'NodeJs',
+                        proficiency: 3
+                    },
+                    { 
+                        name: 'React',
+                        proficiency: 6.5
+                    },
+                    {
+                        name: 'Redux',
+                        proficiency: 5
+                    },
+                    {
+                        name: 'RTL',
+                        proficiency: 6
+                    }
+                ]
+            },
+             {
+                year: 2024,
+                skills: [
+                    {
+                        name: 'HTML/CSS',
+                        proficiency: 8
+                    },
+                    {
+                        name: 'JavaScript',
+                        proficiency: 9
+                    },
+                    {
+                        name: 'NodeJs',
+                        proficiency: 3
+                    },
+                    { 
+                        name: 'React',
+                        proficiency: 7
+                    },
+                    {
+                        name: 'Redux',
+                        proficiency: 4
+                    },
+                    {
+                        name: 'RTL',
+                        proficiency: 6
                     }
                 ]
             }
@@ -397,16 +511,33 @@ class Skills extends HTMLElement {
         this.shadowRoot.getElementById('pause-btn')
             .addEventListener('click', () => this.pauseTimer());
         this.shadowRoot.getElementById('play-btn')
-            .addEventListener('click', () => this.startTimer());
+            .addEventListener('click', () => this.startAtBegining());
+        this.setupChart();
         this.displaySkills();
+
+        window.addEventListener('resize', () => {
+            this.setupChart();
+            this.updateChart();
+            console.log('I am resized');
+        });
     }
-    displaySkills() {
-        // set up chart dimensions
-        this.chartContainer = this.shadowRoot.getElementById('chart-container');
-        const chartContainerWidth = this.chartContainer.getBoundingClientRect().width || 800;
-        
-        this.width = chartContainerWidth - this.margin.left - this.margin.right;
-        this.height = 500 - this.margin.top - this.margin.bottom;
+
+    setupChart() {
+         // set up chart dimensions
+         this.chartContainer = this.shadowRoot.getElementById('chart-container');
+         const chartContainerWidth = this.chartContainer.getBoundingClientRect().width || 800;
+         console.log('testin: ', this.chartContainer.getBoundingClientRect().width )
+         this.width = chartContainerWidth - this.margin.left - this.margin.right;
+         this.height = 400 - this.margin.top - this.margin.bottom;
+         const transformTopMargin = chartContainerWidth < 768 ? this.margin.top - 30 : this.margin.top;
+         const transformLeftMargin = chartContainerWidth < 600 ? this.margin.left - 20 : this.margin.left;
+
+         // Remove the existing SVG container if it exists
+         if (this.svg) {
+            console.log('this svg is: ', this.svg.node().parentNode);
+            const svgParent = this.svg.node().parentNode;
+            svgParent.remove();
+        }
 
         // Create SVG container
         this.svg = d3.select(this.chartContainer)
@@ -414,25 +545,26 @@ class Skills extends HTMLElement {
         .attr('width', this.width + this.margin.left + this.margin.right)
         .attr('height', this.height + this.margin.top + this.margin.bottom)
         .append('g')
-        .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
-
-        console.log('the range is: ', d3.range(6));
-
-        // Add Initial bars for the first time
-        this.updateBars(2013);
-        this.updateAxis();
-        this.startTimer();
-        this.svg.append('text')
-            .attr('class', 'year')
-            .attr('x', this.width - 20)
-            .attr('y', this.height)
-            .attr('dy', '0.35em')
-            .style('font-size', '2rem')
-            .attr('text-anchor', 'end')
-            .text(2013);
+        .attr('transform', `translate(${transformLeftMargin}, ${transformTopMargin})`);
     }
 
+    updateChart() {
+        this.updateBars(this.currentYear);
+        this.updateAxis();
+        this.appendYear();
+    }
+
+    displaySkills() {
+        // Add Initial bars for the first time
+        this.updateBars(this.currentYear);
+        this.updateAxis();
+        this.appendYear();
+        this.startTimer();
+    }
+
+
     updateBars(year) {
+
         // Set up scales
         this.yScale = d3.scaleBand()
             .domain([])
@@ -454,80 +586,81 @@ class Skills extends HTMLElement {
         // update domain for yScale
         this.yScale.domain(skills.map((d) => d.name));
 
-        const barGroups = this.svg.selectAll('.bar-group')
+        const bars = this.svg.selectAll('.bar')
             .data(skills, d => d.name);
 
         // Enter new bar groups
-        const bars = barGroups
-            .join(enter => enter
-                    .append('g')
-                    .attr('class', 'bar-group')
-                    .attr('width', d => this.xScale(d.proficiency))
-                    .attr('transform', d => `translate(0, ${this.yScale(d.name)})`),
-                update => update
-                    .transition()
-                    .duration(1000)
-                    .attr('width', d => this.xScale(d.proficiency))
-                    .attr('transform', d => `translate(0, ${this.yScale(d.name)})`),
-                exit => exit
-                    .transition()
-                    .duration(800)
-                    .remove()
-                )    
-
-        // Append multiple smaller bars to each bar
-        const updatedBars = bars.selectAll('.bar')
-            .data(d => Array.from({ length: Math.ceil(d.proficiency) }).fill(d))
-            .join(enter => enter
+        bars.join(enter => enter
                     .append('rect')
                     .attr('class', 'bar')
-                    .attr('x', (d, i) => this.xScale(i))
-                    .attr('width', (d, i) => this.xScale(1) - 1)
-                    .attr('height', this.yScale.bandwidth())
+                    .attr('width', d => this.xScale(d.proficiency))
+                    .attr('height', d => this.yScale.bandwidth())
+                    .attr('transform', d => `translate(0, ${this.yScale(d.name)})`)
                     .style('fill', d => this.colorCode[d.name] || 'steelblue')
                     .style('opacity', 0)
                     .transition()
-                    .duration(1500)
+                    .duration(800)
                     .style('opacity', 1),
                 update => update
                     .transition()
                     .duration(1000)
-                    .attr('x', (d, i) => this.xScale(i))
-                    .attr('width', (d, i) => this.xScale(1) - 1)
-                    .attr('height', this.yScale.bandwidth()),
+                    .attr('width', d => this.xScale(d.proficiency))
+                    .attr('height', d => this.yScale.bandwidth())
+                    .attr('transform', d => `translate(0, ${this.yScale(d.name)})`),
                 exit => exit
                     .transition()
-                    .duration(1000)
+                    .duration(800)
                     .style('opacity', 0)
                     .remove()
-            );
+                );
         
 
         // Add labels inside the bar
         const labels = this.svg.selectAll('.label')
             .data(skills, d => d.name);
         
-        labels.enter()
-            .append('text')
-            .attr('class', 'label')
-            .attr('x', d => this.xScale(d.proficiency) - 20)
-            .attr('y', d => this.yScale(d.name) + this.yScale.bandwidth() / 2)
-            .attr('dy', '0.35em')
-            .attr('text-anchor', 'end')
-            .text(d => d.name)
-            .merge(labels)
-            .transition()
-            .duration(1000)
-            .attr('x', d => this.xScale(d.proficiency) - 20)
-            .attr('y', d =>  this.yScale(d.name) + this.yScale.bandwidth() / 2)
-
-        labels.exit().remove();
+        labels.join(enter => enter
+                        .append('text')
+                        .attr('class', 'label')
+                        .attr('x', d => this.xScale(d.proficiency) - 20)
+                        .attr('y', d => this.yScale(d.name) + this.yScale.bandwidth() / 2)
+                        .attr('dy', '0.35em')
+                        .attr('text-anchor', 'end')
+                        .text(d => this.abbreviateText(d.name, this.xScale(d.proficiency) - 20))
+                        .style('opacity', 0)
+                        .transition()
+                        .duration(1000)
+                        .style('opacity', 1),
+                    update => update
+                        .transition()
+                        .duration(1000)
+                        .attr('x', d => this.xScale(d.proficiency) - 20)
+                        .attr('y', d => this.yScale(d.name) + this.yScale.bandwidth() / 2)
+                        .text(d => this.abbreviateText(d.name, this.xScale(d.proficiency) - 20)),
+                    exit => exit
+                        .transition()
+                        .duration(800)
+                        .style('opacity', 0)
+                        .remove()
+            )
 
         // Add year
         this.svg.select('.year')
         .text(year);
 
 
+    }
+
+    abbreviateText(text, proficiency) {
+        if (proficiency < 100) {
+            if (text === 'JavaScript') {
+                return 'JS';
+            }
+            if (text === 'Photoshop') {
+                return 'PS';
+            }
+        }
+        return text;
     }
 
     // Add axes and labels
@@ -546,24 +679,48 @@ class Skills extends HTMLElement {
             .attr("x", 0 - this.height / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("Skill");
+            .text("Skills");
             
         this.svg.append("text")
             .attr("x", this.width / 2)
             .attr("y", 0 - this.margin.top + 30)
             .style("text-anchor", "middle")
+            .attr('class', 'hide-on-mobile')
             .text("Proficiency Rating (0-10) for top 6 most used skills in a calender year");
 
        
     }
 
+    appendYear() {
+        this.svg.append('text')
+            .attr('class', 'year')
+            .attr('x', this.chartContainer.getBoundingClientRect().width > 600 ? this.width - 25 : this.width)
+            .attr('y', this.chartContainer.getBoundingClientRect().width > 600 ? this.height - 25 : this.height)
+            .attr('dy', '0.35em')
+            .style('font-size', '2rem')
+            .attr('text-anchor', 'middle')
+            .text(this.currentYear);
+    }
+
+    startAtBegining() {
+        if (this.currentYear === 2013) {
+            this.updateBars(this.currentYear);
+            this.startTimer();
+        } else {
+            this.startTimer();
+        }
+    }
+
     startTimer() {
+        this.shadowRoot.getElementById('play-btn').setAttribute('disabled', true);
+        this.shadowRoot.getElementById('pause-btn').removeAttribute('disabled');
         this.barChartInterval = d3.interval(() => {
             this.currentYear++;
-            if (this.currentYear > 2021) {
+            if (this.currentYear > 2024) {
                 this.pauseTimer();
                 this.currentYear = 2013;
             } else {
+                
                 this.updateBars(this.currentYear);
             }
             // this.updateAxis();
@@ -571,6 +728,8 @@ class Skills extends HTMLElement {
     }
 
     pauseTimer() {
+        this.shadowRoot.getElementById('play-btn').removeAttribute('disabled');
+        this.shadowRoot.getElementById('pause-btn').setAttribute('disabled', true);
         this.barChartInterval.stop();
     }
 
