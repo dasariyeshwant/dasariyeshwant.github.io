@@ -515,10 +515,15 @@ class Skills extends HTMLElement {
         this.setupChart();
         this.displaySkills();
 
+        let dwidth = window.innerWidth;
         window.addEventListener('resize', () => {
-            this.setupChart();
-            this.updateChart();
-            console.log('I am resized');
+            const wwidth = window.innerWidth;
+            if (dwidth !== wwidth) {
+                dwidth = window.innerWidth;
+                this.setupChart();
+                this.updateChart();
+            }
+            
         });
     }
 
@@ -526,7 +531,6 @@ class Skills extends HTMLElement {
          // set up chart dimensions
          this.chartContainer = this.shadowRoot.getElementById('chart-container');
          const chartContainerWidth = this.chartContainer.getBoundingClientRect().width || 800;
-         console.log('testin: ', this.chartContainer.getBoundingClientRect().width )
          this.width = chartContainerWidth - this.margin.left - this.margin.right;
          this.height = 400 - this.margin.top - this.margin.bottom;
          const transformTopMargin = chartContainerWidth < 768 ? this.margin.top - 30 : this.margin.top;
@@ -534,7 +538,6 @@ class Skills extends HTMLElement {
 
          // Remove the existing SVG container if it exists
          if (this.svg) {
-            console.log('this svg is: ', this.svg.node().parentNode);
             const svgParent = this.svg.node().parentNode;
             svgParent.remove();
         }
